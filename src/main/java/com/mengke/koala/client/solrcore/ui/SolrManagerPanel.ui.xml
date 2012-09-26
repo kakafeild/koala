@@ -1,0 +1,81 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="verticalLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+    <ui:with type="com.sencha.gxt.data.shared.ListStore" field="commandStore"/>
+    <ui:with type="com.sencha.gxt.data.shared.LabelProvider" field="commandLabelProvider"/>
+
+    <ui:style>
+        .background {
+            background-color: white;
+        }
+    </ui:style>
+
+    <container:PortalLayoutContainer ui:field="portal" numColumns="3" addStyleNames="{style.background}">
+        <container:portlet column="0">
+            <gxt:Portlet headingText="Data Import" height="250" collapsible="false"
+                         animCollapse="false">
+                <container:VerticalLayoutContainer>
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Command">
+                            <form:widget>
+                                <form:ComboBox ui:field="commandCombo" allowBlank="false"
+                                               forceSelection="true" store="{commandStore}"
+                                               triggerAction="ALL" labelProvider="{commandLabelProvider}"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Verbose">
+                            <form:widget>
+                                <form:CheckBox ui:field="verboseCheckBox"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Clean">
+                            <form:widget>
+                                <form:CheckBox ui:field="cleanCheckBox"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Commit">
+                            <form:widget>
+                                <form:CheckBox ui:field="commitCheckBox"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Optimize">
+                            <form:widget>
+                                <form:CheckBox ui:field="optimizeCheckBox"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <container:SimpleContainer ui:field="dataImportStatusContainer"/>
+                    </container:child>
+                </container:VerticalLayoutContainer>
+
+                <gxt:button>
+                    <button:TextButton text="Execute Import" ui:field="executeImportButton"/>
+                </gxt:button>
+            </gxt:Portlet>
+        </container:portlet>
+    </container:PortalLayoutContainer>
+
+</ui:UiBinder>

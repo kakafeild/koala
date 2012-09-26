@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataConfig>
+    <document>
+        <entity name="eraAgent" pk='id'
+                query="
+				  SELECT
+					  ea.user_code                  id,
+					  ea.description,
+					  ea.as_id,
+					  ea.user_name pinYin,
+					  ea.small_photo_path,
+					  ea.sina_account,
+					  ea.qq_account,
+					  ea.mobile,
+					  ea.photo_path,
+					  ea.self_introduce,
+					  ea.get_honor,
+					  ea.service_years,
+					  ea.hits,
+					  ea.profession_experience,
+					  ast.BBD_ID,
+					  ast.LATITUDE,
+					  ast.LONGITUDE,
+					  ast.ORG_NAME,
+					  bbd.BUSINESS_DISTRICT_NAME,
+					  bbd.BD_ID,
+					  bd.DISTRICT_NAME,
+					  IFNULL((SELECT
+						 AVG(ahs.SATISFACTION)         /5
+					   FROM agent_his_satisfaction ahs
+					   WHERE ahs.AGENT_ID = ea.user_code),0.0)   satisfaction,
+					  (SELECT
+						  CASE 
+							 WHEN COUNT(*)>50 THEN 50
+							 ELSE COUNT(*)
+							END  cnt
+						FROM era_house_comment ehc,
+						  era_house eh,
+						  community c
+						WHERE ehc.uid = ea.user_code 
+						    AND ehc.if_legal!= 0
+						    AND eh.HS_ID = ehc.hid
+						    AND eh.STATUS = '105000000001'
+						    AND c.COMMUNITY_CODE = eh.COMMUNITY_CODE
+						    AND eh.IF_SHOW = 1
+						    AND (c.ERA_BBD_ID IS NOT NULL
+						          OR c.ERA_BD_ID IS NOT NULL))    hsNums,
+					   ass.domain,
+					   ass.friendly_shop,
+					   ass.signature,
+					   ass.theme,
+					   1 agentType,
+					   ea.AQ_ROLE,
+					   ea.al_id,
+					   ifnull(ta.TOTAL_ANSWERS_COUNT, 0) TOTAL_ANSWERS_COUNT,
+                       ifnull(ga.SUGGESTED_ANSWERS_COUNT, 0) SUGGESTED_ANSWERS_COUNT,
+                       ifnull(sa.SATISFIED_ANSWERS_COUNT, 0) SATISFIED_ANSWERS_COUNT,
+                       ifnull(ra.RESOLVED_QUESTIONS_COUNT, 0) RESOLVED_QUESTIONS_COUNT,
+                       ifnull(tra.TODAY_RESOLVED_QUESTIONS_COUNT, 0) TODAY_RESOLVED_QUESTIONS_COUNT
+					FROM era_agent ea
+					  LEFT JOIN era_org ast
+	                    ON ast.AO_ID = ea.AS_ID
+					  LEFT JOIN era_basis_business_district bbd
+						ON bbd.BBD_ID = ast.BBD_ID
+					  LEFT JOIN basis_district bd
+						ON bd.BD_ID = bbd.BD_ID
+					  LEFT JOIN agent_shop ass ON ass.agent_id=ea.user_code
+					  LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as TOTAL_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0
+                        GROUP BY CREATOR_ID) ta ON ta.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as SUGGESTED_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT = 1
+                        GROUP BY CREATOR_ID) ga ON ga.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as SATISFIED_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT = 2
+                        GROUP BY CREATOR_ID) sa ON sa.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as RESOLVED_QUESTIONS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT &gt; 0
+                        GROUP BY CREATOR_ID) ra ON ra.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as TODAY_RESOLVED_QUESTIONS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 1 AND ANSWER_SORT &gt; 0 AND date(CREATE_TIME) = date(date_add(now(), interval - 1 day))
+                        GROUP BY CREATOR_ID) tra ON tra.CREATOR_ID = ea.USER_CODE
+					WHERE NOT EXISTS(SELECT
+									   ata.AGENT_ID
+									 FROM agent_terminal_account ata
+									 WHERE ata.ATA_STATUS = 2
+										 AND ata.AGENT_TERMINAL_ACCOUNT_TYPE = 'ZS'
+										 AND ata.AGENT_ID = ea.user_code)
+						AND ea.status = 1"
+                deltaImportQuery="SELECT
+					  ea.user_code                  id,
+					  ea.description,
+					  ea.as_id,
+					  ea.user_name pinYin,
+					  ea.small_photo_path,
+					  ea.sina_account,
+					  ea.qq_account,
+					  ea.mobile,
+					  ea.photo_path,
+					  ea.self_introduce,
+					  ea.get_honor,
+					  ea.service_years,
+					  ea.hits,
+					  ea.profession_experience,
+					  ea.al_id,
+					  ast.BBD_ID,
+					  ast.LATITUDE,
+					  ast.LONGITUDE,
+					  ast.ORG_NAME,
+					  bbd.BUSINESS_DISTRICT_NAME,
+					  bbd.BD_ID,
+					  bd.DISTRICT_NAME,
+					  IFNULL((SELECT
+						 AVG(ahs.SATISFACTION)         /5
+					   FROM agent_his_satisfaction ahs
+					   WHERE ahs.AGENT_ID = ea.user_code),0.0)   satisfaction,
+					  (SELECT
+						  CASE 
+							 WHEN COUNT(*)>50 THEN 50
+							 ELSE COUNT(*)
+							END  cnt
+						FROM era_house_comment ehc,
+						  era_house eh,
+						  community c
+						WHERE ehc.uid = ea.user_code 
+						    AND ehc.if_legal != 0
+						    AND eh.HS_ID = ehc.hid
+						    AND eh.STATUS = '105000000001'
+						    AND c.COMMUNITY_CODE = eh.COMMUNITY_CODE
+						    AND eh.IF_SHOW = 1
+						    AND (c.ERA_BBD_ID IS NOT NULL
+						          OR c.ERA_BD_ID IS NOT NULL))    hsNums,
+					   ass.domain,
+					   ass.friendly_shop,
+					   ass.signature,
+					   ass.theme,
+					   1 agentType,
+					   ea.AQ_ROLE,
+					   ifnull(ta.TOTAL_ANSWERS_COUNT, 0) TOTAL_ANSWERS_COUNT,
+                       ifnull(ga.SUGGESTED_ANSWERS_COUNT, 0) SUGGESTED_ANSWERS_COUNT,
+                       ifnull(sa.SATISFIED_ANSWERS_COUNT, 0) SATISFIED_ANSWERS_COUNT,
+                       ifnull(ra.RESOLVED_QUESTIONS_COUNT, 0) RESOLVED_QUESTIONS_COUNT,
+                       ifnull(tra.TODAY_RESOLVED_QUESTIONS_COUNT, 0) TODAY_RESOLVED_QUESTIONS_COUNT
+					FROM era_agent ea
+					   LEFT JOIN era_org ast
+	                    ON ast.AO_ID = ea.AS_ID
+					  LEFT JOIN era_basis_business_district bbd
+						ON bbd.BBD_ID = ast.BBD_ID
+					  LEFT JOIN basis_district bd
+						ON bd.BD_ID = bbd.BD_ID
+					  LEFT JOIN agent_shop ass ON ass.agent_id=ea.user_code
+					  LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as TOTAL_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0
+                        GROUP BY CREATOR_ID) ta ON ta.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as SUGGESTED_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT = 1
+                        GROUP BY CREATOR_ID) ga ON ga.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as SATISFIED_ANSWERS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT = 2
+                        GROUP BY CREATOR_ID) sa ON sa.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as RESOLVED_QUESTIONS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT &gt; 0
+                        GROUP BY CREATOR_ID) ra ON ra.CREATOR_ID = ea.USER_CODE
+                            LEFT JOIN
+                        (SELECT
+                            CREATOR_ID, COUNT(ID) as TODAY_RESOLVED_QUESTIONS_COUNT
+                        FROM
+                            ERA_FAQ_ANSWERS
+                        WHERE
+                            IS_SHOW &gt;= 0 AND ANSWER_SORT &gt; 0 AND date(CREATE_TIME) = date(date_add(now(), interval - 1 day))
+                        GROUP BY CREATOR_ID) tra ON tra.CREATOR_ID = ea.USER_CODE
+					WHERE ea.user_code = ${dataimporter.delta.id}"
+                deltaQuery="SELECT
+					  ea.USER_CODE                  id
+					  FROM ERA_AGENT ea
+					  WHERE NOT EXISTS(SELECT
+									   ata.AGENT_ID
+									 FROM AGENT_TERMINAL_ACCOUNT ata
+									 WHERE ata.ATA_STATUS = 2
+										 AND ata.AGENT_TERMINAL_ACCOUNT_TYPE = 'ZS'
+										 AND ata.AGENT_ID = ea.USER_CODE)
+						AND ea.STATUS = 1 AND ea.LAST_MODIFY_TIME &gt; '${dataimporter.last_index_time}'">
+            <field column="id" name="id"/>
+            <field column="description" name="userName"/>
+            <field column="as_id" name="asId"/>
+            <field column="pinYin" name="pinYin"/>
+            <field column="small_photo_path" name="smallPhotoPath"/>
+            <field column="sina_account" name="sinaAccount"/>
+            <field column="qq_account" name="qqCount"/>
+            <field column="mobile" name="mobile"/>
+            <field column="photo_path" name="photoPath"/>
+			<field column="self_introduce" name="selfIntroduce"/>
+			<field column="get_honor" name="getHonor"/>
+			<field column="service_years" name="serviceYears"/>
+			<field column="hits" name="hits"/>
+			<field column="profession_experience" name="processionExperience"/>
+			<field column="LATITUDE" name="latitude"/>
+			<field column="LONGITUDE" name="longitude"/>
+			<field column="ORG_NAME" name="storeName"/>
+			<field column="BD_ID" name="bdId"/>
+			<field column="DISTRICT_NAME" name="districtName"/>
+			<field column="satisfaction" name="satisfaction"/>
+			<field column="hsNums" name="hsNums"/>
+			<field column="domain" name="domain"/>
+			<field column="friendly_shop" name="friendlyShop"/>
+			<field column="signature" name="signature"/>
+			<field column="theme" name="theme"/>
+			<field column="agentType" name="agentType"/>
+			<field column="BBD_ID" name="bbdId"/>
+			<field column="BUSINESS_DISTRICT_NAME" name="businessDistrictName"/>
+            <field column="AQ_ROLE" name="aqRole"/>
+            <field column="TOTAL_ANSWERS_COUNT" name="totalAnswersCount"/>
+            <field column="SUGGESTED_ANSWERS_COUNT" name="suggestedAnswersCount"/>
+            <field column="SATISFIED_ANSWERS_COUNT" name="satisfiedAnswersCount"/>
+            <field column="RESOLVED_QUESTIONS_COUNT" name="resolvedQuestionsCount"/>
+            <field column="TODAY_RESOLVED_QUESTIONS_COUNT" name="todayResolvedQuestionsCount"/>
+            <field column="al_id" name="alId"/>
+            <!-- 房源信息-->
+            <entity name="house" pk="hid" query="SELECT
+							  ehc.hid,
+							  ehc.comment_title,
+							  eh.ROOM_NUM,
+							  eh.HALL_NUM,
+							  eh.TOTAL_PRICE,
+							  eh.BUILDING_AREA
+							FROM era_house_comment ehc
+							LEFT JOIN era_house eh ON eh.HS_ID=ehc.hid
+							WHERE ehc.uid = '${eraAgent.id}' AND eh.STATUS='105000000001'
+							ORDER BY ehc.score DESC
+							LIMIT 3">
+                 <field column="hid" name="hid"/>
+                 <field column="comment_title" name="commentTitle"/>
+                 <field column="ROOM_NUM" name="roomNum"/>
+                 <field column="HALL_NUM" name="hallNum"/>
+                 <field column="TOTAL_PRICE" name="totalPrice"/>
+                 <field column="BUILDING_AREA" name="buildingArea"/>
+            </entity>
+        </entity>
+    </document>
+</dataConfig> 

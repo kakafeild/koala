@@ -1,0 +1,14 @@
+/**
+ * Sencha GXT 3.0.1 - Sencha for GWT
+ * Copyright(c) 2007-2012, Sencha, Inc.
+ * licensing@sencha.com
+ *
+ * http://www.sencha.com/products/gxt/license/
+ */
+.x-desktop {
+  background: #3d71b8 url(desktop.jpg) no-repeat left top; 
+}
+
+.x-taskbar {
+  background: url(taskbuttons-panel-bg.gif) repeat-x !important;  
+}

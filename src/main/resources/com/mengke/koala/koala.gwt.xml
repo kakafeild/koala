@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="koala">
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name='com.sencha.gxt.ui.GXT'/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+
+    <inherits name='com.sencha.gxt.desktop.Desktop' />
+    <inherits name='com.sencha.gxt.chart.Chart' />
+
+	<inherits name="com.google.gwt.resources.Resources" />
+	<inherits name="com.google.gwt.inject.Inject" />
+    <inherits name="com.google.gwt.place.Place" />
+	<inherits name="com.google.gwt.json.JSON"/>
+    <inherits name="com.google.gwt.xml.XML" />
+    <inherits name="com.google.gwt.emul.Emulation" />
+
+  	<!-- GWT should use the user-agent locale -->
+	<set-configuration-property name="locale.useragent" value="Y"/>
+	
+ 	<inherits name="com.google.gwt.logging.Logging"/>
+    <inherits name="com.sencha.gxt.legacy.Legacy"/>
+    <set-property name="gwt.logging.logLevel" value="CONFIG"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    
+	<!-- Enable the simple remote handler -->
+	<set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
+
+	<set-property name="gwt.logging.firebugHandler" value="DISABLED" />
+    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+	<set-property name="gwt.logging.consoleHandler" value="DISABLED" />
+	<set-property name="gwt.logging.developmentModeHandler" value="DISABLED" />
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
+	<set-property name="gwt.logging.systemHandler" value="DISABLED" />
+    
+	<source path="client" />
+    <source path="shared" />
+
+    <entry-point class='com.mengke.koala.client.DesktopApp' />
+
+    <servlet path='/SolrCoreRPCService' class='com.mengke.koala.server.solrcore.SolrCoreRPCServiceImpl'/>
+</module>

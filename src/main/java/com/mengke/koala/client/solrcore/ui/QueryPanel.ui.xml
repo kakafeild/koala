@@ -1,0 +1,109 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form">
+
+
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData"
+             field="westData"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="centerData"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData"
+             field="verticalLayoutData">
+        <ui:attributes width="1" height="-1"/>
+    </ui:with>
+
+    <container:BorderLayoutContainer ui:field="container" borders="true">
+        <container:west layoutData="{westData}">
+            <gxt:FramedPanel headingText="Solr Query Builder" width="350" bodyStyle="background: none; padding: 5px">
+                <container:VerticalLayoutContainer borders="true">
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldLabel text="Request-Handler (qt) ">
+                            <form:widget>
+                                <form:TextField ui:field="requestHandlerField" allowBlank="false" text="/select"/>
+                            </form:widget>
+                        </form:FieldLabel>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldSet headingText="Basic" collapsible="false">
+                            <form:FieldLabel text="q">
+                                <form:widget>
+                                    <form:TextArea ui:field="queryField" allowBlank="false" preventScrollbars="true"
+                                                   text="*:*"/>
+                                </form:widget>
+                            </form:FieldLabel>
+                        </form:FieldSet>
+                    </container:child>
+
+                    <container:child layoutData="{verticalLayoutData}">
+                        <form:FieldSet headingText="Advanced" collapsible="false">
+                            <container:VerticalLayoutContainer>
+                                <container:child layoutData="{verticalLayoutData}">
+                                    <form:FieldLabel text="fq">
+                                        <form:widget>
+                                            <form:TextArea ui:field="filterQueryField" preventScrollbars="true"/>
+                                        </form:widget>
+                                    </form:FieldLabel>
+                                </container:child>
+
+                                <container:child layoutData="{verticalLayoutData}">
+                                    <form:FieldLabel text="sort">
+                                        <form:widget>
+                                            <form:TextField ui:field="sortField"/>
+                                        </form:widget>
+                                    </form:FieldLabel>
+                                </container:child>
+
+                                <container:child layoutData="{verticalLayoutData}">
+                                    <form:FieldLabel text="start, rows">
+                                        <form:widget>
+                                            <g:HorizontalPanel>
+                                                <form:TextField ui:field="startField" text="0" width="75"/>
+                                                <form:TextField ui:field="rowsField" text="10" width="75"/>
+                                            </g:HorizontalPanel>
+                                        </form:widget>
+                                    </form:FieldLabel>
+                                </container:child>
+
+                                <container:child layoutData="{verticalLayoutData}">
+                                    <form:FieldLabel text="fl">
+                                        <form:widget>
+                                            <form:TextField ui:field="fieldLimitField"/>
+                                        </form:widget>
+                                    </form:FieldLabel>
+                                </container:child>
+
+                                <container:child layoutData="{verticalLayoutData}">
+                                    <form:FieldLabel text="debugQuery">
+                                        <form:widget>
+                                            <form:CheckBox ui:field="debugCheckBox"/>
+                                        </form:widget>
+                                    </form:FieldLabel>
+                                </container:child>
+                            </container:VerticalLayoutContainer>
+                        </form:FieldSet>
+                    </container:child>
+                </container:VerticalLayoutContainer>
+
+                <gxt:button>
+                    <button:TextButton text="Execute Query" ui:field="executeQueryButton"/>
+                </gxt:button>
+
+                <gxt:button>
+                    <button:TextButton text="Generate Query" ui:field="generateQueryButton"/>
+                </gxt:button>
+            </gxt:FramedPanel>
+
+
+        </container:west>
+        <container:center layoutData="{centerData}">
+            <container:SimpleContainer borders="true" >
+                <g:Frame ui:field="resultContainer" width="100%"
+                         height="100%"/>
+            </container:SimpleContainer>
+        </container:center>
+    </container:BorderLayoutContainer>
+
+</ui:UiBinder>
