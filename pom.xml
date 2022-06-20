@@ -27,7 +27,7 @@
         <gwt.version>2.4.0</gwt.version>
         <gxt.version>3.0.1</gxt.version>
         <uibinder.version>2.4.0</uibinder.version>
-        <mysql.version>5.1.18</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
     </properties>
 
     <dependencies>
