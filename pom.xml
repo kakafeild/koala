@@ -21,7 +21,7 @@
         <log4j.version>1.2.15</log4j.version>
         <solr.version>4.0.0-ALPHA</solr.version>
         <servlet.version>2.5</servlet.version>
-        <spring.version>3.1.2.RELEASE</spring.version>
+        <spring.version>3.2.18.RELEASE</spring.version>
         <cglib.version>2.2.2</cglib.version>
         <gin.version>1.5.0</gin.version>
         <gwt.version>2.4.0</gwt.version>
